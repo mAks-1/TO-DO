@@ -1,3 +1,5 @@
+from typing import AsyncGenerator
+
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     AsyncSession,
@@ -34,13 +36,13 @@ class DBHelper:
     async def dispose(self):
         await self.engine.dispose()
 
-    async def get_session(self) -> AsyncSession:
+    async def get_session(self) -> AsyncGenerator[AsyncSession, None]:
         async with self.session_factory() as session:
             yield session
 
 
 db_helper = DBHelper(
-    url=str(settings.db_url),
+    url=str(settings.db.url),
     echo=settings.db.echo,
     echo_pool=settings.db.echo_pool,
     max_overflow=settings.db.max_overflow,
