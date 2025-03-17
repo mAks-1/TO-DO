@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.models import db_helper
-from app.core.schemas.schemas import ReadTask, CreateTask
+from app.core.schemas.schemas import ReadTask, CreateTask, DeleteTask
 from app.crud import crud as tasks_crud
 
 router = APIRouter(
@@ -32,4 +32,17 @@ async def create_task(
         session=session,
         task_create=task_create,
     )
+    return task
+
+
+@router.delete("/{task_id}")
+async def delete_task(
+    session: Annotated[AsyncSession, Depends(db_helper.get_session)],
+    task_id: int,
+):
+    task = await tasks_crud.delete_task(
+        session=session,
+        task_id_to_delete=task_id,
+    )
+
     return task
