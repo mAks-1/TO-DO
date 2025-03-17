@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.models import db_helper
-from app.core.schemas.schemas import ReadTask, CreateTask, DeleteTask
+from app.core.schemas.schemas import ReadTask, CreateTask, DeleteTask, UpdateTask
 from app.crud import crud as tasks_crud
 
 router = APIRouter(
@@ -13,7 +13,10 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[ReadTask])
+@router.get(
+    "",
+    response_model=list[ReadTask],
+)
 async def get_all_tasks(
     session: Annotated[AsyncSession, Depends(db_helper.get_session)],
 ):
@@ -23,7 +26,10 @@ async def get_all_tasks(
     return tasks
 
 
-@router.post("", response_model=ReadTask)
+@router.post(
+    "",
+    response_model=ReadTask,
+)
 async def create_task(
     session: Annotated[AsyncSession, Depends(db_helper.get_session)],
     task_create: CreateTask,
@@ -35,7 +41,10 @@ async def create_task(
     return task
 
 
-@router.delete("/{task_id}")
+@router.delete(
+    "/{task_id}",
+    response_model=DeleteTask,
+)
 async def delete_task(
     session: Annotated[AsyncSession, Depends(db_helper.get_session)],
     task_id: int,
@@ -46,3 +55,21 @@ async def delete_task(
     )
 
     return task
+
+
+@router.put(
+    "/{task_id}",
+    response_model=UpdateTask,
+)
+async def update_task(
+    session: Annotated[AsyncSession, Depends(db_helper.get_session)],
+    task_update: UpdateTask,
+    task_id: int,
+):
+    updated_task = await tasks_crud.update_task(
+        session=session,
+        task_id_to_update=task_id,
+        task_update=task_update,
+    )
+
+    return updated_task
