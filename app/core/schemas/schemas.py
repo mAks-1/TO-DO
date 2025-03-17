@@ -1,18 +1,26 @@
 from pydantic import BaseModel
 
-class Task(BaseModel):
+
+class TaskBase(BaseModel):
     title: str
     description: str
     completed: bool = False
 
 
-class CreateTask(Task):
+class CreateTask(TaskBase):
     pass
 
 
-class deleteTask(Task):
+class DeleteTask(BaseModel):
+    message: str
+
+
+class UpdateTask(TaskBase):
     task_id: int
 
 
-class UpdateTask(deleteTask):
-    pass
+class ReadTask(TaskBase):
+    task_id: int
+
+    class Config:
+        from_attributes = True
