@@ -2,6 +2,12 @@ from pydantic import BaseModel, PostgresDsn
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from dotenv import load_dotenv
+import os
+
+# Завантажити змінні з .env
+load_dotenv()
+
 
 class RunConfig(BaseModel):
     host: str = "0.0.0`"
