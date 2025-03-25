@@ -19,15 +19,15 @@ export default function Todos() {
 
   useEffect(() => {
     fetch(API_URL)
-        .then((res) => res.json())
-        .then((data) => {
-          setTodos(Array.isArray(data) ? data : []);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching todos:", error);
-          setLoading(false);
-        });
+      .then((res) => res.json())
+      .then((data) => {
+        setTodos(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching todos:", error);
+        setLoading(false);
+      });
   }, []);
 
 
@@ -42,7 +42,7 @@ export default function Todos() {
 
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(taskPayload),
     });
 
@@ -54,4 +54,28 @@ export default function Todos() {
       console.error("Error adding task:", response.statusText);
     }
   };
+
+
+const toggleCompleted = async (id: number) => {
+  const todo = todos?.find((todo) => todo.task_id === id);
+  if (todo) {
+    const updatedTodo = { ...todo, completed: !todo.completed };
+
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTodo),
+    });
+
+    if (response.ok) {
+      const updatedTask = await response.json();
+      setTodos((prevTodos) =>
+        prevTodos ? prevTodos.map((task) =>
+          task.task_id === id ? updatedTask : task
+        ) : []
+      );
+    }
+  }
+};
+
 }
