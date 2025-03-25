@@ -78,4 +78,42 @@ const toggleCompleted = async (id: number) => {
   }
 };
 
+
+  const deleteTodo = async (id: number) => {
+    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    setTodos((prevTodos) => prevTodos?.filter((todo) => todo.task_id !== id) || []);
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (!todos) return <p>Error loading todos.</p>;
+
+  return (
+    <div>
+      <h1>ToDo List</h1>
+      <div>
+        <input
+          type="text"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          placeholder="Enter a task..."
+        />
+        <button onClick={addTodo}>Add</button>
+      </div>
+      <ul>
+        {todos.length === 0 ? (
+          <p>No todos yet!</p>
+        ) : (
+          todos.map((todo) => (
+            <li key={todo.task_id} style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
+              {todo.title}
+              <button onClick={() => toggleCompleted(todo.task_id)}>
+                {todo.completed ? "Mark Incomplete" : "Mark Completed"}
+              </button>
+              <button onClick={() => deleteTodo(todo.task_id)}>❌</button>
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
+  );
 }
