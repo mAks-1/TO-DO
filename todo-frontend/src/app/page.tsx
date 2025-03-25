@@ -1,4 +1,5 @@
 import Todos from "./todos";
+import './style.css';
 
 export default function Home() {
   return (
