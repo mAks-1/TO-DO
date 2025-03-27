@@ -1,75 +1,69 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.models import db_helper
+from app.core.models import db_helper, ToDo
 from app.core.schemas.schemas import ReadTask, CreateTask, DeleteTask, UpdateTask
 from app.crud import crud as tasks_crud
 
 router = APIRouter(
-    prefix="/api",
+    prefix="/api/todos",
     tags=["todos"],
 )
 
 
-@router.get(
-    "",
-    response_model=list[ReadTask],
-)
+@router.get("", response_model=list[ReadTask])
 async def get_all_tasks(
     session: Annotated[AsyncSession, Depends(db_helper.get_session)],
 ):
     tasks = await tasks_crud.get_all_tasks(session=session)
-    if tasks is None:
-        return []
-    return tasks
+    return tasks if tasks else []
 
 
-@router.post(
-    "",
-    response_model=ReadTask,
-)
+@router.post("", response_model=ReadTask)
 async def create_task(
     session: Annotated[AsyncSession, Depends(db_helper.get_session)],
     task_create: CreateTask,
 ):
-    task = await tasks_crud.create_task(
-        session=session,
-        task_create=task_create,
-    )
-    return task
+    return await tasks_crud.create_task(session=session, task_create=task_create)
 
 
-@router.delete(
-    "/{task_id}",
-    response_model=DeleteTask,
-)
+@router.delete("/{task_id}", response_model=DeleteTask)
 async def delete_task(
     session: Annotated[AsyncSession, Depends(db_helper.get_session)],
     task_id: int,
 ):
-    task = await tasks_crud.delete_task(
-        session=session,
-        task_id_to_delete=task_id,
-    )
-
+    task = await tasks_crud.delete_task(session=session, task_id_to_delete=task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
     return task
 
 
-@router.put(
-    "/{task_id}",
-    response_model=UpdateTask,
-)
+@router.patch("/{task_id}", response_model=ReadTask)
 async def update_task(
-    session: Annotated[AsyncSession, Depends(db_helper.get_session)],
-    task_update: UpdateTask,
     task_id: int,
+    task_update: UpdateTask,
+    session: Annotated[AsyncSession, Depends(db_helper.get_session)],
 ):
-    updated_task = await tasks_crud.update_task(
-        session=session,
-        task_id_to_update=task_id,
-        task_update=task_update,
-    )
+    print("Received update data:", task_update)  # for debugging
 
-    return updated_task
+    result = await session.execute(select(ToDo).filter(ToDo.task_id == task_id))
+    task = result.scalars().first()
+
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    if task_update.completed is not None:
+        task.completed = task_update.completed
+
+    if task_update.title:
+        task.title = task_update.title
+    if task_update.description:
+        task.description = task_update.description
+
+    await session.commit()
+    await session.refresh(task)
+
+    return task
