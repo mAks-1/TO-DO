@@ -16,7 +16,8 @@ class DeleteTask(BaseModel):
 
 
 class UpdateTask(TaskBase):
-    task_id: int
+    # task_id: int
+    pass
 
 
 class ReadTask(TaskBase):
