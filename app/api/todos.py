@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.models import db_helper, ToDo
+from app.core.models import ToDo
+from app.core.models.db_helper import db_helper
 from app.core.schemas.schemas import ReadTask, CreateTask, DeleteTask, UpdateTask
 from app.crud import crud as tasks_crud
 
