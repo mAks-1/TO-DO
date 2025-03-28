@@ -112,3 +112,35 @@ button.delete {
 button.delete:hover {
   background: #c82333;
 }
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-form input,
+.edit-form textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.edit-form button {
+  padding: 10px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-form button.cancel {
+  background: #dc3545;
+}
+
+.edit-form button:hover {
+  opacity: 0.8;
+}

@@ -48,21 +48,18 @@ async def update_task(
     task_update: UpdateTask,
     session: Annotated[AsyncSession, Depends(db_helper.get_session)],
 ):
-    print("Received update data:", task_update)  # for debugging
-
     result = await session.execute(select(ToDo).filter(ToDo.task_id == task_id))
     task = result.scalars().first()
 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
+    if task_update.title is not None:
+        task.title = task_update.title
+    if task_update.description is not None:
+        task.description = task_update.description
     if task_update.completed is not None:
         task.completed = task_update.completed
-
-    if task_update.title:
-        task.title = task_update.title
-    if task_update.description:
-        task.description = task_update.description
 
     await session.commit()
     await session.refresh(task)
