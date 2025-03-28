@@ -1,117 +1,114 @@
-/* Основні стилі для контейнера */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap');
+
+/* Загальні стилі */
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f7fc;
+  background: #f4f4f4;
+  color: #333;
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  color: black;
+  min-height: 100vh;
+  font-family: 'Josefin Sans', sans-serif;
 }
 
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+main {
+  width: 45%;
 }
 
-/* Стиль для форми додавання нового завдання */
-div {
+div.todo-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* Форма додавання */
+div.add-todo-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
+  gap: 10px;
 }
 
-input {
+div.add-todo-form input,
+div.add-todo-form textarea {
   padding: 10px;
-  margin-bottom: 10px;
-  width: 300px;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: border-color 0.3s ease;
-  color: #0a0a0a;
+  border-radius: 5px;
+  font-size: 1rem;
 }
 
-input:focus {
-  outline: none;
-  border-color: #4a90e2;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #4a90e2;
+div.add-todo-form button {
+  padding: 10px;
   border: none;
+  background: #007bff;
   color: white;
-  border-radius: 4px;
-  font-size: 16px;
+  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s;
 }
 
-button:hover {
-  background-color: #357ab7;
+div.add-todo-form button:hover {
+  background: #0056b3;
 }
 
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Стиль для списку завдань */
-ul {
-  list-style-type: none;
+/* Список завдань */
+ul.todo-list {
+  list-style: none;
   padding: 0;
-  margin: 0;
-  width: 80%;
-  max-width: 600px;
+  margin-top: 20px;
 }
 
-li {
+li.todo-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  padding: 15px;
-  margin: 5px 0;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
-  color: #0a0a0a;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  transition: opacity 0.3s;
 }
 
-li:hover {
-  background-color: #f0f0f0;
-}
-
-li button {
-  margin-left: 10px;
-  background-color: transparent;
-  border: none;
-  color: #4a90e2;
-  cursor: pointer;
-  font-size: 16px;
-  transition: color 0.3s ease;
-}
-
-li button:hover {
-  color: #357ab7;
-}
-
-/* Стиль для позначення виконаного завдання */
-li[style*="line-through"] {
+li.todo-item.completed {
+  opacity: 0.6;
   text-decoration: line-through;
-  color: #aaa;
 }
 
-li button:nth-child(1) {
-  display: inline-block;
+/* Кнопки дій */
+div.todo-actions button {
+  padding: 5px 10px;
+  border: none;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 5px;
 }
 
-li button:nth-child(2) {
-  display: inline-block;
-  font-size: 20px;
+button.complete {
+  background: #28a745;
+  color: white;
+}
+
+button.complete:hover {
+  background: #218838;
+}
+
+button.incomplete {
+  background: #ffc107;
+  color: white;
+}
+
+button.incomplete:hover {
+  background: #e0a800;
+}
+
+button.delete {
+  background: #dc3545;
+  color: white;
+}
+
+button.delete:hover {
+  background: #c82333;
 }
