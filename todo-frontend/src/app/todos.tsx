@@ -114,7 +114,6 @@ export default function Todos() {
 
   return (
     <div className="todo-container">
-      <h1>ToDo List</h1>
       <div className="add-todo-form">
         <input
           type="text"
